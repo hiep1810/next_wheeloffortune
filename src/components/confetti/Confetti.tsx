@@ -12,14 +12,14 @@ export default function Confetti({ isActive }: ConfettiProps) {
     if (!isActive) return;
 
     // Fire multiple bursts of confetti
-    const duration = 3000;
+    const duration = 1000;
     const end = Date.now() + duration;
 
     const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFE66D'];
 
     (function frame() {
       confetti({
-        particleCount: 100,
+        particleCount: 7,
         angle: 60,
         spread: 55,
         origin: { x: 0 },
@@ -27,7 +27,7 @@ export default function Confetti({ isActive }: ConfettiProps) {
       });
       
       confetti({
-        particleCount: 100,
+        particleCount: 7,
         angle: 120,
         spread: 55,
         origin: { x: 1 },

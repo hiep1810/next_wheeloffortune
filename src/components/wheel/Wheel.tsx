@@ -24,6 +24,9 @@ export default function Wheel({ segments, onSpinEnd }: WheelProps) {
     const centerY = canvas.height / 2;
     const radius = Math.min(centerX, centerY) - 10;
 
+    // Clear canvas first
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
     // Draw wheel segments
     segments.forEach((segment, index) => {
       const startAngle = (index * 2 * Math.PI) / segments.length;
@@ -54,6 +57,7 @@ export default function Wheel({ segments, onSpinEnd }: WheelProps) {
     ctx.arc(centerX, centerY, 15, 0, 2 * Math.PI);
     ctx.fillStyle = '#333';
     ctx.fill();
+
   }, [segments, currentRotation]);
 
   const spinWheel = () => {
@@ -97,6 +101,15 @@ export default function Wheel({ segments, onSpinEnd }: WheelProps) {
         style={{
           transform: `rotate(${currentRotation}deg)`,
           transition: isSpinning ? 'none' : 'transform 0.3s ease-out',
+        }}
+      />
+      <div 
+        className="absolute right-0 top-1/2 -translate-y-1/2 h-0 w-0"
+        style={{
+          borderTop: '10px solid transparent',
+          borderBottom: '10px solid transparent',
+          borderRight: '20px solid #FF0000',
+          filter: 'drop-shadow(0 0 1px black)',
         }}
       />
       <button
