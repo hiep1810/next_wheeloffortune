@@ -68,10 +68,8 @@ export default function Wheel({ segments, onSpinEnd }: WheelProps) {
     const minSpins = 5; // Minimum number of full rotations
     const startTime = Date.now();
 
-    // Calculate final rotation based on selected segment
-    const selectedIndex = Math.floor(Math.random() * segments.length);
-    const segmentAngle = 360 / segments.length;
-    const finalAngle = 360 * minSpins + selectedIndex * segmentAngle;
+    // Tạo một góc quay ngẫu nhiên (đủ lớn để quay nhiều vòng)
+    const finalAngle = 360 * minSpins + Math.random() * 360;
 
     const animate = () => {
       const now = Date.now();
@@ -85,7 +83,13 @@ export default function Wheel({ segments, onSpinEnd }: WheelProps) {
       } else {
         setCurrentRotation(finalAngle);
         setIsSpinning(false);
-        onSpinEnd?.(segments[selectedIndex]);
+        
+        // Tính toán segment dựa trên góc cuối cùng
+        const normalizedAngle = finalAngle % 360;
+        const segmentAngle = 360 / segments.length;
+        // Lấy index của segment mà con trỏ đang chỉ vào
+        const selectedIndex = Math.floor(normalizedAngle / segmentAngle);
+        onSpinEnd?.(segments[segments.length - 1 - selectedIndex]);
       }
     };
 
