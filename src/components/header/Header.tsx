@@ -4,7 +4,7 @@ import { GiGamepad } from 'react-icons/gi';
 
 const Header = () => {
   return (
-    <header className="w-full bg-gray-800 text-white py-4 px-6 flex items-center justify-between">
+    <header className="sticky top-0 z-50 w-full bg-gray-800 text-white py-4 px-6 flex items-center justify-between">
       <div className="flex items-center">
         <Link 
           href="/" 
