@@ -33,11 +33,6 @@ export default function WheelPage() {
       } catch (error) {
         console.error('Invalid JSON format');
       }
-    } else {
-      const items = e.target.value.split('\n').filter(item => item.trim() !== '') as string[];
-      setWheelListItems(items);
-      const listToJSONItems = wheelListItemsToJSON(items);
-      setWheelListToJSONItems(listToJSONItems);
     }
   };
 
@@ -69,6 +64,34 @@ export default function WheelPage() {
     return wheelListItemsJSON;
   }
 
+  const handleWheelListItems = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      const textArea = e.target as HTMLTextAreaElement;
+      const items = textArea.value.split('\n');
+
+    if(e.key === 'Backspace'){
+      if(items.length > 0){
+        items[items.length - 1] = items[items.length - 1].slice(0, -1);
+      }
+    }else {
+      if (e.key === 'Enter' && !isJSON) {
+        items.push('');
+      } 
+      else{
+        if(items.length > 0){ 
+          items[items.length - 1] = items[items.length - 1] + e.key;
+        }
+        else{
+          items.push(e.key);
+        }
+      }
+
+
+    }
+    setWheelListItems(items);
+    const listToJSONItems = wheelListItemsToJSON(items);
+    setWheelListToJSONItems(listToJSONItems); 
+  }
+
   return (
     <section className="h-full flex flex-col items-center justify-center">
       <Confetti isActive={showConfetti} />
@@ -92,19 +115,18 @@ export default function WheelPage() {
         </div>
         <div className="flex flex-1 flex-col items-center justify-center gap-4 scrollbar-vscode-thick">
           <textarea 
-            className="w-3/4 h-64 bg-gray-800 text-white px-4 py-2 rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            value={isJSON ? JSON.stringify(wheelJSONItems, null, 2) : wheelListItems.join('\n')}
+            className={`${isJSON && 'hidden'} w-3/4 h-64 bg-gray-800 text-white px-4 py-2 rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+            value={wheelListItems.join('\n')}
+            placeholder={`Enter wheel items as List`}
+            onKeyDown={handleWheelListItems}
+            spellCheck={false}
+          />
+          
+          <textarea 
+            className={`${!isJSON && 'hidden'} w-3/4 h-64 bg-gray-800 text-white px-4 py-2 rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500`}
             onChange={handleWheelItemsChange}
-            placeholder={`Enter wheel items as ${isJSON ? 'JSON' : 'List'}`}
-            onKeyDown={(e) => {
-              console.log(e.key);
-              console.log(isJSON);
-              if (e.key === 'Enter' && !isJSON) {
-                console.log('Enter key pressed');
-                e.preventDefault();
-                e.stopPropagation(); // Ngăn chặn hành vi mặc định
-              }
-            }}
+            value={JSON.stringify(wheelJSONItems, null, 2)}
+            placeholder={`Enter wheel items as JSON`}
             spellCheck={false}
           />
 
