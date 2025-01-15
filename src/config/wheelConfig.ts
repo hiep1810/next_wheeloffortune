@@ -1,11 +1,15 @@
+
+export type WheelSegmentType = 'points' | 'name' | 'none';
+export type WheelSegmentRewardType = number | string;
+
 export interface WheelSegment {
   id: number;
   text: string;
   probability: number;
   color: string;
   reward: {
-    type: string;
-    value: number;
+    type: WheelSegmentType;
+    value: WheelSegmentRewardType;
   };
 }
 
