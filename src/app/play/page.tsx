@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Wheel from '@/components/wheel/Wheel';
 import { wheelSegments, WheelSegment, WheelSegmentType } from '@/config/wheelConfig';
 import Confetti from '@/components/confetti/Confetti';
@@ -11,6 +11,7 @@ export default function WheelPage() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [isJSON, setIsJSON] = useState(false);
   const [wheelListItems, setWheelListItems] = useState<string[]>([]);
+  const colors = useRef<string[]>([]);
   const [wheelListToJSONItems, setWheelListToJSONItems] = useState<WheelSegment[]>([]);
 
   const handleSpinEnd = (segment: WheelSegment) => {
@@ -49,12 +50,12 @@ export default function WheelPage() {
     return '#' + Math.floor(Math.random()*16777215).toString(16);
   }
 
-  const wheelListItemsToJSON = (listItems: string[]) : WheelSegment[] =>{
+  const wheelListItemsToJSON = (listItems: string[], colors: string[]) : WheelSegment[] =>{
     const wheelListItemsJSON = listItems.map((item, index) => ({
       id: index + 1,
       text: item,
       probability: 1 / listItems.length,
-      color: randomColor(),
+      color: colors[index],
       reward: {
         type: 'name' as WheelSegmentType,
         value: item
@@ -65,18 +66,30 @@ export default function WheelPage() {
   }
 
   const handleWheelListItems = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-      const textArea = e.target as HTMLTextAreaElement;
-      const items = textArea.value.split('\n');
+    const textArea = e.target as HTMLTextAreaElement;
+    const items = textArea.value.split('\n');
 
     if(e.key === 'Backspace'){
       if(items.length > 0){
-        items[items.length - 1] = items[items.length - 1].slice(0, -1);
+        if(items[items.length - 1].length > 0){
+          items[items.length - 1] = items[items.length - 1].slice(0, -1);
+        }
+        else{
+          items.pop();
+          colors.current.pop();
+          const listToJSONItems = wheelListItemsToJSON(items, colors.current);
+          setWheelListToJSONItems(listToJSONItems); 
+        }
       }
     }else {
-      if (e.key === 'Enter' && !isJSON) {
+      if (e.key === 'Enter') {
+        const newColors = [...colors.current, randomColor()];
+        colors.current = newColors;
+        const listToJSONItems = wheelListItemsToJSON(items, newColors);
+        setWheelListToJSONItems(listToJSONItems); 
         items.push('');
       } 
-      else{
+      else if (e.key.length === 1 &&  /^[a-zA-Z0-9\s!@#$%^&*()_+-=[\]{};:'",./<>?]$/.test(e.key)){
         if(items.length > 0){ 
           items[items.length - 1] = items[items.length - 1] + e.key;
         }
@@ -84,12 +97,8 @@ export default function WheelPage() {
           items.push(e.key);
         }
       }
-
-
     }
     setWheelListItems(items);
-    const listToJSONItems = wheelListItemsToJSON(items);
-    setWheelListToJSONItems(listToJSONItems); 
   }
 
   return (
