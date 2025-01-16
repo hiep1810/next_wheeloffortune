@@ -32,7 +32,7 @@ export default function WheelPage() {
           setWheelJSONItems(newItems);
         }
       } catch (error) {
-        console.error('Invalid JSON format');
+        console.error('Invalid JSON format', error);
       }
     }
   };
