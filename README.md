@@ -1,5 +1,20 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+# Wheel of Fortune Game
+
+Một ứng dụng vòng quay may mắn tương tác được xây dựng với Next.js và TypeScript.
+
+## Tính năng
+
+- 🎡 Vòng quay mượt mà với animation
+- 🎉 Hiệu ứng confetti khi thắng giải
+- ✏️ Tùy chỉnh phần thưởng dễ dàng:
+  - Nhập danh sách theo từng dòng
+  - Hoặc định dạng JSON với nhiều tùy chọn hơn
+- 🎨 Màu sắc ngẫu nhiên cho mỗi phần thưởng
+- 📊 Có thể tùy chỉnh xác suất trúng thưởng
+- 🔄 Nút Reset để quay lại cấu hình mặc định
+
 ## Getting Started
 
 First, run the development server:
@@ -14,9 +29,27 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000/play](http://localhost:3000/play) with your browser to see the wheel game.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Cách sử dụng
+
+1. Chọn chế độ nhập liệu (List/JSON)
+2. Nhập danh sách phần thưởng:
+   - Chế độ List: Mỗi phần thưởng một dòng
+   - Chế độ JSON: Định dạng mảng các đối tượng với các thuộc tính:
+     ```json
+     {
+       "id": number,
+       "text": string,
+       "probability": number,
+       "color": string,
+       "reward": {
+         "type": "points" | "name" | "none",
+         "value": number | string
+       }
+     }
+     ```
+3. Nhấn vào vòng quay để bắt đầu
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
